@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Models\Announcement;
+use App\Models\User;
 use App\Observers\AnnouncementObserver;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -29,5 +31,13 @@ class AppServiceProvider extends ServiceProvider
         ]);
 
         Announcement::observe(AnnouncementObserver::class);
+
+        Gate::define('is-your-announcement', function (User $user, Announcement $announcement) {
+            if ($user->id === $announcement->user_id) {
+                return true;
+            }
+
+            return false;
+        });
     }
 }

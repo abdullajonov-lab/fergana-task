@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AnnouncementCreateRequest;
 use App\Models\Announcement;
 use App\Services\AnnouncementService;
-use App\Services\FileService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Validator;
 
 class AnnouncementController extends Controller
@@ -65,9 +65,32 @@ class AnnouncementController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Announcement $announcement)
+    public function update(Request $request, Announcement $id)
     {
-
+        if (Gate::denies('is-your-announcement', $id)) {
+            return response()->json([
+                'message' => 'You are not authorized to update this announcement'
+            ], 403);
+        }
+        $data = $request->validate([
+            "title" => "sometimes|string",
+            "description" => "sometimes|string",
+            "price" => "sometimes|numeric",
+            "location" => "sometimes|string",
+            "category_id" => "sometimes|integer",
+            "status" => "sometimes|string",
+            "attachment" => "sometimes|array",
+            "attachment.*" => "sometimes|file|mimes:jpg,jpeg,png,pdf|max:2048"
+        ]);
+        $ann = $this->announcementService->update($data, $id);
+        if ($ann) {
+            return response()->json([
+                'message' => 'Announcement updated successfully',
+                "data" => $ann
+            ], 200);
+        } else {
+            return response()->json(['message' => 'WHOOPS Something gone wrong, our elfs are trying theis best to fix ths problem please wait...'], 500);
+        }
     }
 
     /**
@@ -75,6 +98,14 @@ class AnnouncementController extends Controller
      */
     public function destroy(Announcement $announcement)
     {
-        //
+        if (Gate::denies('is-your-announcement', $announcement)) {
+            return response()->json([
+                'message' => 'You are not authorized to delete this announcement'
+            ], 403);
+        }
+        $announcement->delete();
+        return response()->json([
+            'message' => 'Announcement deleted successfully'
+        ], 200);
     }
 }

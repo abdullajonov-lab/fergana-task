@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Announcement;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Support\Facades\Log;
 
 class AnnouncementService
@@ -68,5 +69,24 @@ class AnnouncementService
         }
 
         return $announcement;
+    }
+
+    public function update(array $all, Announcement $announcement)
+    {
+        try {
+            $announcement->update($all);
+            if (isset($all["attachment"])) {
+                foreach ($all["attachment"] as $attachment) {
+                    $name = $this->fileService->upload($attachment, "attachments/");
+                    $announcement->attachment()->create([
+                        "path" => $name,
+                    ]);
+                }
+            }
+            return $announcement->with("attachment")->first();
+        } catch (Exception $e) {
+            Log::error($e->getMessage() . " on time: " . Carbon::now()->format("Y-m-d H:i:s"));
+            return false;
+        }
     }
 }

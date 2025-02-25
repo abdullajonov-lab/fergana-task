@@ -16,7 +16,7 @@ class AnnouncementObserver
     /**
      * Handle the Announcement "updated" event.
      */
-    public function updated(Announcement $announcement): void
+    public function updating(Announcement $announcement): void
     {
         $announcement->slug = Str::slug($announcement->title) . "-" . Str::random();
         $announcement->save();
