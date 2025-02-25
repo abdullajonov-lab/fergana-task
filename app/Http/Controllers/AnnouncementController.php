@@ -35,7 +35,7 @@ class AnnouncementController extends Controller
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
-        return $this->announcementService->index($request->all());
+        return $this->announcementService->index($validator->validated());
     }
 
     /**

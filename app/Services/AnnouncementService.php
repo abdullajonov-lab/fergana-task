@@ -36,19 +36,19 @@ class AnnouncementService
         $attachment = new Announcement();
         if (!is_null($params)){
             if (isset($params["status"])){
-                $attachment->where("status", $params["status"]);
+                $attachment = $attachment->where("status", $params["status"]);
             }
             if (isset($params["location"])){
-                $attachment->where("location", $params["location"]);
+                $attachment = $attachment->where("location", $params["location"]);
             }
             if (isset($params["price_from"])){
-                $attachment->where("price", ">", $params["price_from"]);
+                $attachment = $attachment->where("price", ">", $params["price_from"]);
             }
             if (isset($params["price_to"])){
-                $attachment->where("price", "<", $params["price_to"]);
+                $attachment = $attachment->where("price", "<", $params["price_to"]);
             }
             if (isset($params["category_id"])){
-                $attachment->where("category_id", $params["category_id"]);
+                $attachment = $attachment->where("category_id", $params["category_id"]);
             }
         }
 
