@@ -17,5 +17,5 @@ Route::post("/announcement-update/{id}", [AnnouncementController::class, "update
     ->middleware('auth:api');
 
 // Not to override the previous route
-Route::apiResource("/announcement-get", AnnouncementController::class)
-    ->except(["show","index"]);
+Route::get("/announcement-get", [AnnouncementController::class, "index"]);
+Route::get("/announcement-get/{id}", [AnnouncementController::class, "show"]);

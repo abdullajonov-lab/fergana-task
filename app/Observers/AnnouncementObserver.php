@@ -12,37 +12,5 @@ class AnnouncementObserver
     {
         $announcement->slug = Str::slug($announcement->title) . "-" . Str::random();
     }
-
-    /**
-     * Handle the Announcement "updated" event.
-     */
-    public function updating(Announcement $announcement): void
-    {
-        $announcement->slug = Str::slug($announcement->title) . "-" . Str::random();
-        $announcement->save();
-    }
-
-    /**
-     * Handle the Announcement "deleted" event.
-     */
-    public function deleted(Announcement $announcement): void
-    {
-        //
-    }
-
-    /**
-     * Handle the Announcement "restored" event.
-     */
-    public function restored(Announcement $announcement): void
-    {
-        //
-    }
-
-    /**
-     * Handle the Announcement "force deleted" event.
-     */
-    public function forceDeleted(Announcement $announcement): void
-    {
-        //
-    }
+    // since   PHP Fatal error:  Allowed memory size of 134217728 bytes exhausted (tried to allocate 262144 bytes) in /srv/http/SideProjects/fergana-task/vendor/laravel/framework/src/Illuminate/Support/Str.php on line 122 error I AM DELTEING all funcs
 }

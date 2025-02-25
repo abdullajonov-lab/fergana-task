@@ -62,6 +62,10 @@ class AnnouncementService
             ->with("attachment")
             ->first();
 
+        if (!$announcement) {
+            return false;
+        }
+
         $cacheKey = 'announcement_view_' . $announcement->id . '_' . request()->ip();
         if (!cache()->has($cacheKey)) {
             $announcement->increment("view_count");

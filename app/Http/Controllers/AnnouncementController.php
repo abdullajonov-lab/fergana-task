@@ -57,9 +57,17 @@ class AnnouncementController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Announcement $announcement)
+    public function show(Announcement $id)
     {
-        return $this->announcementService->show($announcement->slug);
+        $announcement = $this->announcementService->show($id->slug);
+        if ($announcement) {
+            return response()->json([
+                'message' => 'Announcement retrieved successfully',
+                "data" => $announcement
+            ], 200);
+        } else {
+            return response()->json(['message' => 'Announcement not found'], 404);
+        }
     }
 
     /**
