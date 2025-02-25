@@ -27,7 +27,7 @@ class AppServiceProvider extends ServiceProvider
         Relation::morphMap([
             'users'=>'App\Models\User',
             'categories'=>'App\Models\Category',
-            'attachments'=>'App\Models\Announcement'
+            'announcements'=>'App\Models\Announcement'
         ]);
 
         Announcement::observe(AnnouncementObserver::class);

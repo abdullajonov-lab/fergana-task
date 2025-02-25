@@ -13,7 +13,7 @@ class Announcement extends Model
 
     protected $guarded = ["id"];
 
-    public function attachment(): MorphMany
+    public function attachments(): MorphMany
     {
         return $this->morphMany(Attachment::class, 'attachmentable');
     }

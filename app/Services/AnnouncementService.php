@@ -20,12 +20,12 @@ class AnnouncementService
             $announcement = Announcement::create($params);
             foreach ($params["attachment"] as $attachment) {
                 $name = $this->fileService->upload($attachment, "attachments/");
-                $announcement->attachment()->create([
+                $announcement->attachments()->create([
                     "path" => $name,
                 ]);
             }
-            return $announcement->with("attachment")->first();
-        } catch (\Exception $e) {
+            return $announcement;
+        } catch (Exception $e) {
             Log::error($e->getMessage() . " on time: " . Carbon::now()->format("Y-m-d H:i:s"));
             return false;
         }
@@ -51,15 +51,14 @@ class AnnouncementService
                 $attachment = $attachment->where("category_id", $params["category_id"]);
             }
         }
-
-        return $attachment->paginate(10);
+        return $attachment->with("attachments")->paginate(10);
     }
 
     public function show($slug)
     {
         $announcement = Announcement::where("slug", $slug)
             ->where("status", "active")
-            ->with("attachment")
+            ->with("attachments")
             ->first();
 
         if (!$announcement) {
@@ -72,6 +71,7 @@ class AnnouncementService
             cache()->put($cacheKey, true, now()->addMinutes(5));
         }
 
+//        dd($announcement->attachments);
         return $announcement;
     }
 
